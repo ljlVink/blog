@@ -1,0 +1,94 @@
+---
+import { GISCUS } from "@/config";
+
+const isConfigured =
+  GISCUS.enabled &&
+  GISCUS.repo &&
+  GISCUS.repoId &&
+  GISCUS.category &&
+  GISCUS.categoryId;
+---
+
+{
+  isConfigured && (
+    <section class="mt-10" data-pagefind-ignore>
+      <div id="giscus-thread"></div>
+    </section>
+  )
+}
+
+{
+  isConfigured && (
+    <script
+      is:inline
+      define:vars={{
+        repo: GISCUS.repo,
+        repoId: GISCUS.repoId,
+        category: GISCUS.category,
+        categoryId: GISCUS.categoryId,
+        mapping: GISCUS.mapping,
+        strict: GISCUS.strict,
+        reactionsEnabled: GISCUS.reactionsEnabled,
+        emitMetadata: GISCUS.emitMetadata,
+        inputPosition: GISCUS.inputPosition,
+        lang: GISCUS.lang,
+        loading: GISCUS.loading,
+        theme: GISCUS.theme,
+      }}
+      data-astro-rerun
+    >
+      function getCurrentTheme() {
+        const currentTheme = document.documentElement.dataset.theme;
+        return currentTheme === "dark" ? theme.dark : theme.light;
+      }
+
+      function syncGiscusTheme() {
+        const frame = document.querySelector("iframe.giscus-frame");
+        frame?.contentWindow?.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: getCurrentTheme(),
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+
+      function injectGiscus() {
+        const container = document.getElementById("giscus-thread");
+        if (!container || container.dataset.loaded === "true") return;
+
+        const script = document.createElement("script");
+        script.src = "https://giscus.app/client.js";
+        script.async = true;
+        script.crossOrigin = "anonymous";
+        script.setAttribute("data-repo", repo);
+        script.setAttribute("data-repo-id", repoId);
+        script.setAttribute("data-category", category);
+        script.setAttribute("data-category-id", categoryId);
+        script.setAttribute("data-mapping", mapping);
+        script.setAttribute("data-strict", strict);
+        script.setAttribute("data-reactions-enabled", reactionsEnabled);
+        script.setAttribute("data-emit-metadata", emitMetadata);
+        script.setAttribute("data-input-position", inputPosition);
+        script.setAttribute("data-theme", getCurrentTheme());
+        script.setAttribute("data-lang", lang);
+        script.setAttribute("data-loading", loading);
+
+        container.appendChild(script);
+        container.dataset.loaded = "true";
+      }
+
+      injectGiscus();
+      syncGiscusTheme();
+
+      const observer = new MutationObserver(syncGiscusTheme);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
+    </script>
+  )
+}

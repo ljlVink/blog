@@ -1,0 +1,124 @@
+@import "tailwindcss";
+@import "./typography.css";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+:root,
+html[data-theme="light"] {
+  --background: #fdfdfd;
+  --foreground: #282728;
+  --accent: #006cac;
+  --muted: #e6e6e6;
+  --border: #ece9e9;
+}
+
+html[data-theme="dark"] {
+  --background: #212737;
+  --foreground: #eaedf3;
+  --accent: #ff6b01;
+  --muted: #343f60;
+  --border: #ab4b08;
+}
+
+@theme inline {
+  --font-app: "IBM Plex Sans", "Noto Sans SC", "Segoe UI", sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-accent/75;
+    scrollbar-width: auto;
+    scrollbar-color: var(--color-muted) transparent;
+  }
+  html {
+    @apply overflow-y-scroll scroll-smooth;
+  }
+  body {
+    @apply flex min-h-svh flex-col bg-background font-app text-foreground selection:bg-accent/75 selection:text-background;
+  }
+  a,
+  button {
+    @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility max-w-app {
+  @apply max-w-3xl;
+}
+
+@utility app-layout {
+  @apply mx-auto w-full max-w-app px-4;
+}
+
+.active-nav {
+  @apply underline decoration-wavy decoration-2 underline-offset-8;
+}
+
+.typst-svg-container {
+  @apply my-8 w-full overflow-x-auto rounded-2xl border border-border/70 bg-background/40 p-3 sm:p-5;
+}
+
+.typst-svg-container svg,
+.typst-svg-container img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.typst-html-content {
+  @apply text-[1.02rem] leading-8;
+}
+
+.typst-html-content :where(.block-equation) {
+  @apply my-6 overflow-x-auto;
+}
+
+.typst-html-content :where(.inline-equation) {
+  @apply align-middle;
+}
+
+.typst-html-content :where(.block-equation svg),
+.typst-html-content :where(.inline-equation svg) {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.typst-html-content :where(table) {
+  @apply my-8 w-full overflow-hidden rounded-xl border border-border/80;
+}
+
+.typst-html-content :where(th, td) {
+  @apply border border-border/70 px-3 py-2;
+}
+
+.typst-html-content :where(img, svg) {
+  @apply max-w-full;
+}
+
+.typst-svg-container svg :where(text, tspan) {
+  fill: currentColor;
+}
+
+html[data-theme="dark"] .typst-svg-container svg {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html[data-theme="light"] .typst-svg-container svg,
+html[data-theme="dark"] .typst-svg-container svg {
+  transition: filter 180ms ease-in-out;
+}
+
+/* Source: https://piccalil.li/blog/a-more-modern-css-reset/ */
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+  scroll-margin-block: 1rem;
+}
