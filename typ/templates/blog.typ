@@ -38,7 +38,7 @@
     ))
 
     show raw.where(block: true): raw_block => {
-      html.elem("pre", raw_block, attrs: (class: "code-block"))
+      html.elem("div", raw_block, attrs: (class: "code-block"))
     }
 
     show link: link_node => {

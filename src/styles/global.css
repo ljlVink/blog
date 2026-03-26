@@ -10,6 +10,11 @@ html[data-theme="light"] {
   --accent: #006cac;
   --muted: #e6e6e6;
   --border: #ece9e9;
+  --typst-code-bg: #f7f9fc;
+  --typst-code-header: #eff4fa;
+  --typst-code-border: #d7e1ed;
+  --typst-code-text: #203045;
+  --typst-code-subtle: #60738b;
 }
 
 html[data-theme="dark"] {
@@ -18,6 +23,11 @@ html[data-theme="dark"] {
   --accent: #ff6b01;
   --muted: #343f60;
   --border: #ab4b08;
+  --typst-code-bg: #101827;
+  --typst-code-header: #172131;
+  --typst-code-border: #324867;
+  --typst-code-text: #dde7f6;
+  --typst-code-subtle: #91a7c7;
 }
 
 @theme inline {
@@ -90,6 +100,68 @@ html[data-theme="dark"] {
 .typst-html-content :where(.inline-equation svg) {
   display: inline-block;
   vertical-align: middle;
+}
+
+.typst-html-content :where(.code-block) {
+  position: relative;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  border: 1px solid var(--typst-code-border);
+  border-radius: 1rem;
+  background: var(--typst-code-bg);
+  box-shadow: 0 18px 36px -32px rgb(15 23 42 / 24%);
+}
+
+.typst-html-content .code-block > .copy-code {
+  position: absolute;
+  inset-inline-end: 0.85rem;
+  top: 0.85rem;
+  z-index: 2;
+  border: 1px solid color-mix(in srgb, var(--typst-code-border) 72%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--background) 72%, transparent);
+  padding: 0.24rem 0.72rem;
+  font-size: 0.76rem;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--typst-code-text);
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease;
+}
+
+.typst-html-content .code-block > .copy-code:hover {
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--typst-code-border));
+  background: color-mix(in srgb, var(--accent) 10%, var(--background));
+  transform: translateY(-1px);
+}
+
+.typst-html-content .code-block > pre {
+  overflow-x: auto;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 1.00rem 1rem 1rem;
+  color: var(--typst-code-text);
+  box-sizing: border-box;
+}
+
+.typst-html-content .code-block > pre > code {
+  display: block;
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-family:
+    "IBM Plex Mono", "JetBrains Mono", "Fira Code", "SFMono-Regular", monospace;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  white-space: pre;
 }
 
 .typst-html-content :where(table) {

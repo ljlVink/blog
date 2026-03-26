@@ -117,9 +117,10 @@ const nextPost =
     <article
       id="article"
       class:list={[
-        "mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
+        "mt-8 w-full max-w-app",
         {
-          "app-prose": !isSvgTypstPost,
+          "app-prose prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)":
+            !isTypstPost,
           "typst-html-content app-prose": isTypstPost && !isSvgTypstPost,
         },
       ]}
@@ -254,35 +255,42 @@ const nextPost =
    * allowing users to copy code easily. */
   function attachCopyButtons() {
     const copyButtonLabel = "Copy";
-    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+    const article = document.querySelector("#article");
+    if (!article) return;
+
+    for (const staleButton of article.querySelectorAll(".copy-code")) {
+      staleButton.remove();
+    }
+
+    for (const wrapper of article.querySelectorAll('[data-copy-wrapper="true"]')) {
+      const wrappedPre = wrapper.querySelector(":scope > pre");
+      if (wrappedPre instanceof HTMLElement) {
+        wrapper.replaceWith(wrappedPre);
+      }
+    }
+
+    const codeBlocks = Array.from(article.querySelectorAll("pre"));
 
     for (const codeBlock of codeBlocks) {
-      const wrapper = document.createElement("div");
-      wrapper.style.position = "relative";
-
-      // Check if --file-name-offset custom property exists
-      const computedStyle = getComputedStyle(codeBlock);
-      const hasFileNameOffset =
-        computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
-
-      // Determine the top positioning class
-      const topClass = hasFileNameOffset
-        ? "top-(--file-name-offset)"
-        : "-top-3";
-
-      const copyButton = document.createElement("button");
-      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
-      copyButton.innerHTML = copyButtonLabel;
+      delete codeBlock.dataset.bound;
       codeBlock.setAttribute("tabindex", "0");
-      codeBlock.appendChild(copyButton);
+      const typstCodeBlock = codeBlock.parentElement;
 
-      // wrap codebock with relative parent element
-      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
-      wrapper.appendChild(codeBlock);
-
-      copyButton.addEventListener("click", async () => {
-        await copyCode(codeBlock, copyButton);
-      });
+      if (
+        typstCodeBlock instanceof HTMLElement &&
+        typstCodeBlock.classList.contains("code-block")
+      ) {
+        const copyButton = document.createElement("button");
+        copyButton.type = "button";
+        copyButton.className =
+          "copy-code rounded text-xs leading-4 font-medium";
+        copyButton.innerHTML = copyButtonLabel;
+        copyButton.dataset.bound = "true";
+        typstCodeBlock.appendChild(copyButton);
+        copyButton.addEventListener("click", async () => {
+          await copyCode(codeBlock, copyButton);
+        });
+      }
     }
 
     async function copyCode(block, button) {
