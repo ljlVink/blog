@@ -33,7 +33,7 @@ async function loadGoogleFonts(
         data: data.buffer.slice(
           data.byteOffset,
           data.byteOffset + data.byteLength
-        ),
+        ) as ArrayBuffer,
         weight,
         style,
       };

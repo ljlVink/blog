@@ -29,7 +29,7 @@ export default defineConfig({
       options: {
         remPx: 14,
         cheerio: {
-          postprocess: $ => {
+          postprocess: ($: import("cheerio").CheerioAPI) => {
             const svg = $("svg");
             svg.attr("width", "100%");
             svg.attr("preserveAspectRatio", "xMinYMin meet");

@@ -7,9 +7,11 @@ import { setAstroConfig, setConfig } from "astro-typst/dist/lib/store.js";
 
 type TypstTarget = "html" | "svg";
 
+type TypstTargetFormat = "html" | "svg";
+
 type LocalTypstConfig = {
   options?: Record<string, unknown>;
-  target?: string | ((id: string) => string | Promise<string>);
+  target?: TypstTargetFormat | ((id: string) => TypstTargetFormat | Promise<TypstTargetFormat>);
   htmlMode?: "text";
   emitSvg?: boolean;
   emitSvgDir?: string;
@@ -92,7 +94,7 @@ function vitePluginLocalTypst(config: LocalTypstConfig, astroBase = "/") {
       } else if (opts.includes("html") || opts.includes("text")) {
         isHtml = true;
       } else {
-        isHtml = (await detectTarget(mainFilePath, config.target ?? defaultTarget)) === "html";
+        isHtml = (await detectTarget(mainFilePath, (config.target ?? defaultTarget) as TypstTargetFormat | ((id: string) => TypstTargetFormat | Promise<TypstTargetFormat>))) === "html";
       }
 
       const renderTarget: TypstTarget = isHtml ? "html" : "svg";
@@ -114,7 +116,7 @@ function vitePluginLocalTypst(config: LocalTypstConfig, astroBase = "/") {
         const publicUrl = path.join(astroBase, emitSvgDir, fileName);
 
         if (import.meta.env.PROD) {
-          this.emitFile({
+          (this as any).emitFile({
             type: "asset",
             fileName: path.join(emitSvgDir, fileName),
             source: Buffer.from(html, "utf-8"),
@@ -154,13 +156,13 @@ export function localTypst(config: LocalTypstConfig = {}): AstroIntegration {
         setAstroConfig(options.config);
 
         options.addRenderer(getRenderer());
-        options.addPageExtension(".typ");
-        options.addContentEntryType({
+        (options as any).addPageExtension(".typ");
+        (options as any).addContentEntryType({
           extensions: [".typ"],
-          async getEntryInfo({ fileUrl, contents }) {
+          async getEntryInfo({ fileUrl, contents }: { fileUrl: URL; contents: string }) {
             const mainFilePath = fileURLToPath(fileUrl);
             const isHtml =
-              (await detectTarget(fileUrl.pathname, mergedConfig.target ?? defaultTarget)) === "html";
+              (await detectTarget(fileUrl.pathname, (mergedConfig.target ?? defaultTarget) as TypstTargetFormat | ((id: string) => TypstTargetFormat | Promise<TypstTargetFormat>))) === "html";
 
             const { getFrontmatter } = await renderToHTMLish(
               {
