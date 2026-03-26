@@ -158,7 +158,7 @@ html[data-theme="dark"] {
   padding: 0;
   color: inherit;
   font-family:
-    "IBM Plex Mono", "JetBrains Mono", "Fira Code", "SFMono-Regular", monospace;
+    Consolas, "Liberation Mono", Menlo, Monaco, "Courier New", monospace;
   font-size: 0.92rem;
   line-height: 1.65;
   white-space: pre;
