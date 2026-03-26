@@ -104,16 +104,20 @@ html[data-theme="dark"] {
   @apply max-w-full;
 }
 
-.typst-svg-container svg :where(text, tspan) {
+.typst-svg-container svg :where(text, tspan),
+.typst-html-content :where(.block-equation, .inline-equation) svg :where(text, tspan) {
   fill: currentColor;
 }
 
-html[data-theme="dark"] .typst-svg-container svg {
+html[data-theme="dark"] .typst-svg-container svg,
+html[data-theme="dark"] .typst-html-content :where(.block-equation svg, .inline-equation svg) {
   filter: invert(1) hue-rotate(180deg);
 }
 
 html[data-theme="light"] .typst-svg-container svg,
-html[data-theme="dark"] .typst-svg-container svg {
+html[data-theme="dark"] .typst-svg-container svg,
+html[data-theme="light"] .typst-html-content :where(.block-equation svg, .inline-equation svg),
+html[data-theme="dark"] .typst-html-content :where(.block-equation svg, .inline-equation svg) {
   transition: filter 180ms ease-in-out;
 }
 
