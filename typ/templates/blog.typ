@@ -42,7 +42,13 @@
     }
 
     show link: link_node => {
-      html.elem("a", link_node, attrs: (href: link_node.dest))
+      let dest = link_node.dest
+      let href = if type(dest) == label {
+        "#" + str(dest)
+      } else {
+        dest
+      }
+      html.elem("a", link_node, attrs: (href: href))
     }
 
     set page(width: auto, height: auto, margin: 1.2em)

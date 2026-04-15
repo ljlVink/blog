@@ -88,8 +88,21 @@ html[data-theme="dark"] {
   @apply text-[1.02rem] leading-8;
 }
 
+.typst-html-content :where(h1, h2, h3, h4, h5, h6) {
+  font-style: normal;
+}
+
 .typst-html-content :where(.block-equation) {
   @apply my-6 overflow-x-auto;
+}
+
+.typst-html-content :where(.figure-container) {
+  @apply my-4 text-center;
+}
+
+.typst-html-content :where(.figure-container figcaption) {
+  @apply mt-2 text-sm text-center;
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
 }
 
 .typst-html-content :where(.inline-equation) {

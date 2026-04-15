@@ -7,7 +7,7 @@
   pubDatetime: "2026-03-26T00:00:00Z",
   tags: ("typst", "astro", "svg"),
   featured: true,
-  draft: false,
+  draft: true,
 )
 
 = A compact math-heavy post

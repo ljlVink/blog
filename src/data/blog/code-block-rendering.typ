@@ -7,7 +7,7 @@
   pubDatetime: "2026-03-25T12:00:00Z",
   tags: ("typst", "code", "test"),
   featured: false,
-  draft: false,
+  draft: true,
 )
 
 == Linear algebra
