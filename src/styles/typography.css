@@ -89,6 +89,89 @@
     pre {
       @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
     }
+
+    .audio-flow {
+      @apply my-8 flex flex-col items-center;
+    }
+
+    .audio-flow-list {
+      @apply flex max-w-full flex-col items-center gap-2;
+    }
+
+    .audio-flow-node {
+      @apply max-w-full rounded-md border px-4 py-3 text-center text-sm leading-relaxed;
+      border-color: #d0d7de;
+      background: #f6f8fa;
+      width: fit-content;
+    }
+
+    .audio-flow-entry {
+      border-color: #d4a72c;
+      background: #fff8c5;
+    }
+
+    .audio-flow-gate {
+      border-color: #cf222e;
+      background: #ffebe9;
+    }
+
+    .audio-flow-route {
+      border-color: #0969da;
+      background: #ddf4ff;
+    }
+
+    .audio-flow-result {
+      border-color: #1a7f37;
+      background: #e6ffec;
+    }
+
+    .audio-flow-title {
+      @apply text-foreground;
+    }
+
+    .audio-flow-note {
+      @apply mt-1 text-xs leading-relaxed;
+      color: #57606a;
+    }
+
+    .audio-flow-arrow {
+      @apply flex justify-center text-lg leading-none;
+      color: #8c959f;
+    }
+
+    .audio-flow-caption {
+      @apply mt-3 text-center text-sm opacity-75;
+    }
+
+    html[data-theme="dark"] & .audio-flow-node {
+      border-color: #30363d;
+      background: #161b22;
+    }
+
+    html[data-theme="dark"] & .audio-flow-entry {
+      border-color: #bb8009;
+      background: #3b2e10;
+    }
+
+    html[data-theme="dark"] & .audio-flow-gate {
+      border-color: #f85149;
+      background: #3d1518;
+    }
+
+    html[data-theme="dark"] & .audio-flow-route {
+      border-color: #58a6ff;
+      background: #0d2d4d;
+    }
+
+    html[data-theme="dark"] & .audio-flow-result {
+      border-color: #3fb950;
+      background: #12251a;
+    }
+
+    html[data-theme="dark"] & .audio-flow-note,
+    html[data-theme="dark"] & .audio-flow-arrow {
+      color: #8b949e;
+    }
   }
 
   /* ===== Code Blocks & Syntax Highlighting ===== */
