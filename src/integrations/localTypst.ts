@@ -4,6 +4,7 @@ import path from "node:path/posix";
 import { defaultTarget, detectTarget } from "astro-typst/dist/lib/prelude.js";
 import { renderToHTMLish } from "astro-typst/dist/lib/typst.js";
 import { setAstroConfig, setConfig } from "astro-typst/dist/lib/store.js";
+import { load as cheerioLoad } from "cheerio";
 
 type TypstTarget = "html" | "svg";
 
@@ -108,6 +109,46 @@ function vitePluginLocalTypst(config: LocalTypstConfig, astroBase = "/") {
         config.options,
         isHtml
       );
+
+      // Post-process Typst HTML output: convert hardcoded syntax-highlight
+      // colors to CSS custom properties so they adapt to light/dark themes.
+      // Typst's built-in highlighter emits inline `color:#xxxxxx` designed
+      // for light backgrounds — without this, Rust attributes like
+      // `#[macro]` (#301414) are nearly invisible on dark code backgrounds.
+      if (isHtml) {
+        const COLOR_MAP: Record<string, string> = {
+          "301414": "var(--syn-attr)",     // Rust attributes, e.g. #[napi]
+          "d73948": "var(--syn-kw)",        // keywords: pub, fn, let, use
+          "4b69c6": "var(--syn-id)",        // identifiers / function names
+          "198810": "var(--syn-str)",       // string literals
+          "74747c": "var(--syn-cmt)",       // comments
+          "16718d": "var(--syn-macro)",     // macro calls: format!, vec!
+          "b60157": "var(--syn-placeholder)", // format-string placeholders
+        };
+
+        const $ = cheerioLoad(html as string);
+        let modified = false;
+        $(".code-block span[style]").each((_, el) => {
+          const style = $(el).attr("style");
+          if (!style) return;
+          const m = style.match(/color:\s*#([0-9a-fA-F]{6})/);
+          if (!m) return;
+          const hex = m[1].toLowerCase();
+          if (COLOR_MAP[hex]) {
+            $(el).attr(
+              "style",
+              style.replace(
+                /color:\s*#[0-9a-fA-F]{6}/,
+                `color: ${COLOR_MAP[hex]}`,
+              ),
+            );
+            modified = true;
+          }
+        });
+        if (modified) {
+          html = $.html();
+        }
+      }
 
       if (config.emitSvg && !isHtml) {
         const contentHash = crypto.randomUUID().slice(0, 8);

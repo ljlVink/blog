@@ -15,6 +15,15 @@ html[data-theme="light"] {
   --typst-code-border: #d7e1ed;
   --typst-code-text: #203045;
   --typst-code-subtle: #60738b;
+
+  /* Typst syntax highlight token colors (light) — original Typst values */
+  --syn-attr: #301414;
+  --syn-kw: #d73948;
+  --syn-id: #4b69c6;
+  --syn-str: #198810;
+  --syn-cmt: #74747c;
+  --syn-macro: #16718d;
+  --syn-placeholder: #b60157;
 }
 
 html[data-theme="dark"] {
@@ -28,6 +37,15 @@ html[data-theme="dark"] {
   --typst-code-border: #324867;
   --typst-code-text: #dde7f6;
   --typst-code-subtle: #91a7c7;
+
+  /* Typst syntax highlight token colors (dark) — lightened for dark backgrounds */
+  --syn-attr: #e0b0b0;
+  --syn-kw: #f08080;
+  --syn-id: #80b0e0;
+  --syn-str: #60c060;
+  --syn-cmt: #8b949e;
+  --syn-macro: #60c0c0;
+  --syn-placeholder: #e080c0;
 }
 
 @theme inline {
